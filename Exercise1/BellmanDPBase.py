@@ -23,7 +23,7 @@ class BellmanDPSolver(object):
 		
 if __name__ == '__main__':
 	solution = BellmanDPSolver()
-	for i in range(20000):
+	for i in range(2000):
 		values, policy = solution.BellmanUpdate(0.9)
 	print("Values : ", values)
 	print("Policy : ", policy)
