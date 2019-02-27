@@ -1,79 +1,111 @@
 #!/usr/bin/env python3
 # encoding utf-8
 
-from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
-from DiscreteHFO.Agent import Agent
+import random
 import argparse
 
+from DiscreteHFO.Agent import Agent
+from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
+
+
 class QLearningAgent(Agent):
-	def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
-		super(QLearningAgent, self).__init__()
-		
+    def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
+        super(QLearningAgent, self).__init__()
+        self.learningRate = learningRate
+        self.discountFactor = discountFactor
+        self.epsilon = epsilon
+        self.initVals = initVals
 
-	def learn(self):
-		raise NotImplementedError
 
-	def act(self):
-		raise NotImplementedError
+    def learn(self):
+        actionDictNextState = {key[1] : value for key, value in self.QValueTable.items() if key[0] == self.nextState}
+        self.QValueTable[(self.curState, self.action)] = self.QValueTable[(self.curState, self.action)] + self.learningRate * \
+                 (self.reward + self.discountFactor * max(actionDictNextState.values()) - self.QValueTable[(self.curState, self.action)])
 
-	def toStateRepresentation(self, state):
-		raise NotImplementedError
 
-	def setState(self, state):
-		raise NotImplementedError
+    def act(self):
+        randomNum = random.random()
+        if randomNum > self.epsilon:
+            return random.choice(self.possibleActions)
+        else:
+            actionDict = {key[1] : value for key, value in self.QValueTable.items() if key[0] == self.curState}
+            return random.choice([action for action, value in actionDict.items() if value == max(actionDict.values())])
 
-	def setExperience(self, state, action, reward, status, nextState):
-		raise NotImplementedError
 
-	def setLearningRate(self, learningRate):
-		raise NotImplementedError
+    def toStateRepresentation(self, state):
+        return str(state[0])
 
-	def setEpsilon(self, epsilon):
-		raise NotImplementedError
 
-	def reset(self):
-		raise NotImplementedError
-		
-	def computeHyperparameters(self, numTakenActions, episodeNumber):
-		raise NotImplementedError
+    def setState(self, state):
+        self.curState = state
+        if not (self.curState, 'KICK') in self.QValueTable.keys():
+            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
+
+
+
+    def setExperience(self, state, action, reward, status, nextState):
+        self.curState = state
+        self.action = action
+        self.reward = reward
+        self.nextState = nextState
+        if not (self.nextState, 'KICK') in self.QValueTable.keys():
+            self.QValueTable.update({(self.nextState, action): self.initVals for action in self.possibleActions})
+
+
+    def setLearningRate(self, learningRate):
+        self.learningRate = learningRate
+
+
+    def setEpsilon(self, epsilon):
+        self.epsilon = epsilon
+
+
+    def reset(self):
+        self.QValueTable = {}
+
+
+    def computeHyperparameters(self, numTakenActions, episodeNumber):
+        return self.learningRate, self.epsilon
+
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--id', type=int, default=0)
-	parser.add_argument('--numOpponents', type=int, default=0)
-	parser.add_argument('--numTeammates', type=int, default=0)
-	parser.add_argument('--numEpisodes', type=int, default=500)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--id', type=int, default=0)
+    parser.add_argument('--numOpponents', type=int, default=0)
+    parser.add_argument('--numTeammates', type=int, default=0)
+    parser.add_argument('--numEpisodes', type=int, default=500)
 
-	args=parser.parse_args()
+    args = parser.parse_args()
 
-	# Initialize connection with the HFO server
-	hfoEnv = HFOAttackingPlayer(numOpponents = args.numOpponents, numTeammates = args.numTeammates, agentId = args.id)
-	hfoEnv.connectToServer()
+    # Initialize connection with the HFO server
+    hfoEnv = HFOAttackingPlayer(numOpponents=args.numOpponents, numTeammates=args.numTeammates, agentId=args.id)
+    hfoEnv.connectToServer()
 
-	# Initialize a Q-Learning Agent
-	agent = QLearningAgent(learningRate = 0.1, discountFactor = 0.99, epsilon = 1.0)
-	numEpisodes = args.numEpisodes
+    # Initialize a Q-Learning Agent
+    agent = QLearningAgent(learningRate=0.1, discountFactor=0.99, epsilon=1.0)
+    numEpisodes = args.numEpisodes
 
-	# Run training using Q-Learning
-	numTakenActions = 0 
-	for episode in range(numEpisodes):
-		status = 0
-		observation = hfoEnv.reset()
-		
-		while status==0:
-			learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
-			agent.setEpsilon(epsilon)
-			agent.setLearningRate(learningRate)
-			
-			obsCopy = observation.copy()
-			agent.setState(agent.toStateRepresentation(obsCopy))
-			action = agent.act()
-			numTakenActions += 1
-			
-			nextObservation, reward, done, status = hfoEnv.step(action)
-			agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status, agent.toStateRepresentation(nextObservation))
-			update = agent.learn()
-			
-			observation = nextObservation
-	
+    # Run training using Q-Learning
+    numTakenActions = 0
+    for episode in range(numEpisodes):
+        status = 0
+        agent.reset()
+        observation = hfoEnv.reset()
+
+        while status == 0:
+            learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
+            agent.setEpsilon(epsilon)
+            agent.setLearningRate(learningRate)
+
+            obsCopy = observation.copy()
+            agent.setState(agent.toStateRepresentation(obsCopy))
+            action = agent.act()
+            numTakenActions += 1
+
+            nextObservation, reward, done, status = hfoEnv.step(action)
+            agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status,
+                                agent.toStateRepresentation(nextObservation))
+            update = agent.learn()
+
+            observation = nextObservation
