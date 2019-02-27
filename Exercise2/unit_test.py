@@ -15,9 +15,8 @@ class Qlearning(unittest.TestCase):
         nextObservation = ((2,1),(2,1))
         agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status,
                             agent.toStateRepresentation(nextObservation))
-        print(agent.QValueTable)
         update = agent.learn()
-        self.assertEqual(update, -0.04)
+        self.assertAlmostEqual(update, -0.04, places=7)
 
 
 if __name__ == '__main__':
