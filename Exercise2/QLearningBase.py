@@ -37,7 +37,7 @@ class QLearningAgent(Agent):
             return random.choice([action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def toStateRepresentation(self, state):
-        return str(state[0])
+        return str(state)
 
     def setState(self, state):
         self.curState = state

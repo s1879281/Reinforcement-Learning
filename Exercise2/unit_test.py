@@ -5,6 +5,7 @@ class Qlearning(unittest.TestCase):
     def test_Qlearning(self):
         agent = QLearningAgent(learningRate=0.1, discountFactor=1, epsilon=1.0)
         obsCopy = ((1,1),(2,1))
+        agent.setState(agent.toStateRepresentation(obsCopy))
         action = 'MOVE_RIGHT'
         reward = -0.4
         status = 0
