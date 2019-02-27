@@ -12,8 +12,10 @@ class QLearningAgent(Agent):
     def __init__(self, learningRate, discountFactor, epsilon, initVals=0.0):
         super(QLearningAgent, self).__init__()
         self.initLearningRate = learningRate
+        self.learningRate = learningRate
         self.discountFactor = discountFactor
         self.initEpsilon = epsilon
+        self.epsilon = epsilon
         self.initVals = initVals
         self.QValueTable = {}
 
