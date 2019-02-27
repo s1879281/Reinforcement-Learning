@@ -13,7 +13,7 @@ echo "Environment Initialized"
 # Sleep is needed to make sure doesn't get connected too soon, as unum 1 (goalie)
 
 sleep 5
-./QLearningBase.py --numOpponents=1 --numEpisodes=$EPISODE &
+./QLearningBase.py --numOpponents=1 --numEpisodes=$EPISODE >/dev/null 2>&1 &
 echo "Attacker Controller Initialized"
 
 sleep 5
