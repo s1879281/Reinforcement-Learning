@@ -61,7 +61,7 @@ class QLearningAgent(Agent):
 
 
     def reset(self):
-        self.QValueTable = {}
+        pass
 
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
@@ -90,7 +90,6 @@ if __name__ == '__main__':
     numTakenActions = 0
     for episode in range(numEpisodes):
         status = 0
-        agent.reset()
         observation = hfoEnv.reset()
 
         while status == 0:
