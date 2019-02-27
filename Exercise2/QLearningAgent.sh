@@ -4,7 +4,7 @@
 # Cannot run an environment where defending agents exist but none are playing
 # goalkeeper
 
-EPISODE=500
+EPISODE=10
 
 ./../../../bin/HFO --defense-agents=2 --offense-agents=1 --offense-on-ball 11 --trials $EPISODE --deterministic --discrete=True --frames-per-trial 2000 --untouched-time 2000 &
 sleep 5
