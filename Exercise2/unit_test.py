@@ -9,7 +9,7 @@ class Qlearning(unittest.TestCase):
 
         obsCopy = ((1,1),(2,1))
         agent.setState(agent.toStateRepresentation(obsCopy))
-        action = 'MOVE_RIGHT'
+        action = 'DRIBBLE_RIGHT'
         reward = -0.4
         status = 0
         nextObservation = ((2,1),(2,1))
