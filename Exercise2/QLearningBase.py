@@ -72,7 +72,7 @@ if __name__ == '__main__':
         parser.add_argument('--id', type=int, default=0)
         parser.add_argument('--numOpponents', type=int, default=0)
         parser.add_argument('--numTeammates', type=int, default=0)
-        parser.add_argument('--numEpisodes', type=int, default=5000)
+        parser.add_argument('--numEpisodes', type=int, default=500)
 
         args = parser.parse_args()
 
