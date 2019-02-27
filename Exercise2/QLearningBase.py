@@ -45,7 +45,6 @@ class QLearningAgent(Agent):
             self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
-        self.curState = state
         self.action = action
         self.reward = reward
         self.nextState = nextState
@@ -89,8 +88,6 @@ if __name__ == '__main__':
         for episode in range(numEpisodes):
             status = 0
             observation = hfoEnv.reset()
-            print('numTakenActions', numTakenActions)
-            print('learningRate', 'epsilon', agent.computeHyperparameters(numTakenActions, episode))
 
             while status == 0:
                 learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
