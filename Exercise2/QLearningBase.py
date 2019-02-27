@@ -15,6 +15,7 @@ class QLearningAgent(Agent):
         self.discountFactor = discountFactor
         self.epsilon = epsilon
         self.initVals = initVals
+        self.QValueTable = {}
 
 
     def learn(self):
