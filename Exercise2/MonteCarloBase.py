@@ -15,6 +15,7 @@ class MonteCarloAgent(Agent):
         self.discountFactor = discountFactor
         self.initEpsilon = epsilon
         self.epsilon = epsilon
+        self.initVals = initVals
         self.QValueTable = defaultdict(lambda: initVals)
         self.returnsDict = defaultdict(lambda: [])
         self.stateActionList = []
@@ -46,6 +47,8 @@ class MonteCarloAgent(Agent):
 
     def setState(self, state):
         self.curState = state
+        if self.curState not in self.QValueTable.keys():
+            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def reset(self):
         self.stateActionList = []
