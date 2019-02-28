@@ -17,6 +17,7 @@ class QLearningAgent(Agent):
         self.discountFactor = discountFactor
         self.initEpsilon = epsilon
         self.epsilon = epsilon
+        self.initVals = initVals
         self.QValueTable = defaultdict(lambda: initVals)
         self.stateList = []
         self.actionList = []
@@ -26,10 +27,12 @@ class QLearningAgent(Agent):
     def learn(self):
         nextStateQList = [value for key, value in self.QValueTable.items() if key[0] == self.nextState]
         if len(nextStateQList) == 0:
-            maxQ = 0
+            maxQ = self.initVals
         else:
             maxQ = max(nextStateQList)
-
+        
+        print('reward', self.rewardList[-1], 'maxQ', maxQ, 'Q', self.QValueTable[
+            (self.curState, self.actionList[-1])])
         update = self.learningRate * (self.rewardList[-1] + self.discountFactor * maxQ - self.QValueTable[
             (self.curState, self.actionList[-1])])
         self.QValueTable[(self.curState, self.actionList[-1])] += update
