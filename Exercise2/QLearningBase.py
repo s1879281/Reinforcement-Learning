@@ -3,6 +3,7 @@
 
 import argparse
 import random
+from collections import defaultdict
 
 from DiscreteHFO.Agent import Agent
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
@@ -16,17 +17,20 @@ class QLearningAgent(Agent):
         self.discountFactor = discountFactor
         self.initEpsilon = epsilon
         self.epsilon = epsilon
-        self.initVals = initVals
-        self.QValueTable = {}
+        self.QValueTable = defaultdict(lambda: initVals)
         self.stateList = []
         self.actionList = []
         self.rewardList = []
         self.statusList = []
 
     def learn(self):
-        actionDictNextState = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.nextState}
-        update = self.learningRate * (
-                self.rewardList[-1] + self.discountFactor * max(actionDictNextState.values()) - self.QValueTable[
+        nextStateQList = [value for key, value in self.QValueTable.items() if key[0] == self.nextState]
+        if len(nextStateQList) == 0:
+            maxQ = 0
+        else:
+            maxQ = max(nextStateQList)
+
+        update = self.learningRate * (self.rewardList[-1] + self.discountFactor * maxQ - self.QValueTable[
             (self.curState, self.actionList[-1])])
         self.QValueTable[(self.curState, self.actionList[-1])] += update
 
@@ -34,19 +38,21 @@ class QLearningAgent(Agent):
 
     def act(self):
         randomNum = random.random()
-        if randomNum > self.epsilon:
+        if randomNum < self.epsilon:
             return random.choice(self.possibleActions)
         else:
             actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
-            return random.choice([action for action, value in actionDict.items() if value == max(actionDict.values())])
+            if len(actionDict) == 0:
+                return random.choice(self.possibleActions)
+            else:
+                return random.choice(
+                    [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def toStateRepresentation(self, state):
         return str(state)
 
     def setState(self, state):
         self.curState = state
-        if not (self.curState, 'KICK') in self.QValueTable.keys():
-            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateList.append(state)
@@ -54,8 +60,6 @@ class QLearningAgent(Agent):
         self.rewardList.append(reward)
         self.statusList.append(status)
         self.nextState = nextState
-        if not (self.nextState, 'KICK') in self.QValueTable.keys():
-            self.QValueTable.update({(self.nextState, action): self.initVals for action in self.possibleActions})
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
@@ -64,11 +68,14 @@ class QLearningAgent(Agent):
         self.epsilon = epsilon
 
     def reset(self):
-        pass
+        self.stateList = []
+        self.actionList = []
+        self.rewardList = []
+        self.statusList = []
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        learningRate = self.initLearningRate * 0.95 ** (episodeNumber // 500)
-        epsilon = self.initEpsilon * 0.98 ** (episodeNumber // 500)
+        learningRate = self.initLearningRate * 0.95 ** (episodeNumber // 100)
+        epsilon = self.initEpsilon * 0.85 ** (episodeNumber // 100)
 
         return learningRate, epsilon
 
@@ -93,6 +100,7 @@ if __name__ == '__main__':
     # Run training using Q-Learning
     numTakenActions = 0
     for episode in range(numEpisodes):
+        agent.reset()
         status = 0
         observation = hfoEnv.reset()
 
