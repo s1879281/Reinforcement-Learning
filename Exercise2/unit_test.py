@@ -1,7 +1,7 @@
 import unittest
 
 from QLearningBase import QLearningAgent
-
+from SARSABase import SARSAAgent
 
 class RLTest(unittest.TestCase):
     def test_Qlearning(self):
@@ -19,6 +19,32 @@ class RLTest(unittest.TestCase):
                                 agent.toStateRepresentation(nextObservation))
             update = agent.learn()
             self.assertAlmostEqual(update, trueUpdate, places=7)
+
+    def test_SARSA(self):
+        agent = SARSAAgent(learningRate=0.1, discountFactor=1, epsilon=1.0)
+        agent.setEpsilon(1.0)
+        agent.setLearningRate(0.1)
+
+        epsStart = True
+        status = 0
+
+        for obsCopy, action, reward, nextObservation, trueUpdate in zip(
+                [((1, 1), (2, 1)), ((2, 1), (2, 1)), ((1, 1), (2, 1))], ['DRIBBLE_RIGHT', 'DRIBBLE_LEFT', 'KICK'],
+                [-0.4, 0.0, 1.0], [((2, 1), (2, 1)), ((1, 1), (2, 1)), 'GOAL'], [None, -0.04, 0.0]):
+            agent.setState(agent.toStateRepresentation(obsCopy))
+
+            agent.setExperience(agent.toStateRepresentation(obsCopy), action, reward, status,
+                                agent.toStateRepresentation(nextObservation))
+            if not epsStart:
+                update = agent.learn()
+                self.assertAlmostEqual(update, trueUpdate, places=7)
+            else:
+                epsStart = False
+                self.assertAlmostEqual(None, trueUpdate, places=7)
+
+        agent.setExperience('GOAL', None, None, None, None)
+        update = agent.learn()
+        self.assertAlmostEqual(update, 0.1, places=7)
 
 
 if __name__ == '__main__':
