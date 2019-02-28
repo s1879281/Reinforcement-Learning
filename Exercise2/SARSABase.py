@@ -3,6 +3,7 @@
 
 import argparse
 import random
+from collections import defaultdict
 
 from DiscreteHFO.Agent import Agent
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
@@ -16,8 +17,7 @@ class SARSAAgent(Agent):
         self.discountFactor = discountFactor
         self.initEpsilon = epsilon
         self.epsilon = epsilon
-        self.initVals = initVals
-        self.QValueTable = {}
+        self.QValueTable = defaultdict(lambda: initVals)
         self.stateList = []
         self.actionList = []
         self.rewardList = []
@@ -33,28 +33,28 @@ class SARSAAgent(Agent):
 
     def act(self):
         randomNum = random.random()
-        if randomNum > self.epsilon:
+        if randomNum < self.epsilon:
             return random.choice(self.possibleActions)
         else:
             actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
-            return random.choice([action for action, value in actionDict.items() if value == max(actionDict.values())])
+            if len(actionDict) == 0:
+                return random.choice(self.possibleActions)
+            else:
+                return random.choice(
+                    [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def setState(self, state):
         self.curState = state
-        if not (self.curState, 'KICK') in self.QValueTable.keys():
-            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateList.append(state)
         self.actionList.append(action)
         self.rewardList.append(reward)
         self.statusList.append(status)
-        if not action:
-            self.QValueTable[(state, action)] = 0
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        learningRate = self.initLearningRate * 0.95 ** (episodeNumber // 500)
-        epsilon = self.initEpsilon * 0.98 ** (episodeNumber // 500)
+        learningRate = self.initLearningRate * 0.95 ** (episodeNumber // 100)
+        epsilon = self.initEpsilon * 0.85 ** (episodeNumber // 100)
 
         return learningRate, epsilon
 
@@ -62,7 +62,10 @@ class SARSAAgent(Agent):
         return str(state)
 
     def reset(self):
-        pass
+        self.stateList = []
+        self.actionList = []
+        self.rewardList = []
+        self.statusList = []
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
