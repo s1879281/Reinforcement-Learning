@@ -45,8 +45,6 @@ class SARSAAgent(Agent):
 
     def setState(self, state):
         self.curState = state
-        if (self.curState, 'KICK') not in self.QValueTable.keys():
-            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateList.append(state)
@@ -57,10 +55,15 @@ class SARSAAgent(Agent):
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         learningRate = self.initLearningRate * 0.9 ** (episodeNumber // 100)
         epsilon = self.initEpsilon * ((1 - 1 / (1 + np.exp(-numTakenActions / 250))) * 2 * 0.9 + 0.1)
+
         return learningRate, epsilon
 
     def toStateRepresentation(self, state):
-        return str(state)
+        state = str(state)
+        if (state, 'KICK') not in self.QValueTable.keys():
+            self.QValueTable.update({(state, action): self.initVals for action in self.possibleActions})
+
+        return state
 
     def reset(self):
         self.stateList = []
