@@ -26,15 +26,9 @@ class QLearningAgent(Agent):
 
     def learn(self):
         nextStateQList = [value for key, value in self.QValueTable.items() if key[0] == self.nextState]
-        if len(nextStateQList) == 0:
-            maxQ = self.initVals
-        else:
-            maxQ = max(nextStateQList)
-        
-        print('reward', self.rewardList[-1], 'maxQ', maxQ, 'Q', self.QValueTable[
-            (self.curState, self.actionList[-1])])
-        update = self.learningRate * (self.rewardList[-1] + self.discountFactor * maxQ - self.QValueTable[
-            (self.curState, self.actionList[-1])])
+        update = self.learningRate * (
+                    self.rewardList[-1] + self.discountFactor * max(nextStateQList) - self.QValueTable[
+                (self.curState, self.actionList[-1])])
         self.QValueTable[(self.curState, self.actionList[-1])] += update
 
         return update
@@ -56,6 +50,8 @@ class QLearningAgent(Agent):
 
     def setState(self, state):
         self.curState = state
+        if self.curState not in self.QValueTable.keys():
+            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateList.append(state)
@@ -63,6 +59,8 @@ class QLearningAgent(Agent):
         self.rewardList.append(reward)
         self.statusList.append(status)
         self.nextState = nextState
+        if self.nextState not in self.QValueTable.keys():
+            self.QValueTable.update({(self.nextState, action): self.initVals for action in self.possibleActions})
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate
