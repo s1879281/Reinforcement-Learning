@@ -29,13 +29,14 @@ class MonteCarloAgent(Agent):
         for i in range(len(self.stateActionList)):
             G = self.discountFactor * G + self.rewardList[-i]
             tempDict[self.stateActionList[-i]] = G
+        print('tempDict',tempDict)
         for key, value in tempDict.items():
             self.returnsDict[key].append(value)
+            print('value', value)
             self.QValueTable[key] = sum(self.returnsDict[key]) / len(self.returnsDict[key])
             curEpisodeList.append(self.QValueTable[key])
 
         return self.QValueTable, curEpisodeList
-
 
     def toStateRepresentation(self, state):
         return str(state)
@@ -61,11 +62,8 @@ class MonteCarloAgent(Agent):
             return random.choice(self.possibleActions)
         else:
             actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
-            if len(actionDict) == 0:
-                return random.choice(self.possibleActions)
-            else:
-                return random.choice(
-                    [action for action, value in actionDict.items() if value == max(actionDict.values())])
+            return random.choice(
+                [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def setEpsilon(self, epsilon):
         self.epsilon = epsilon

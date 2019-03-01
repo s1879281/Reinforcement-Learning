@@ -38,11 +38,8 @@ class SARSAAgent(Agent):
             return random.choice(self.possibleActions)
         else:
             actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
-            if len(actionDict) == 0:
-                return random.choice(self.possibleActions)
-            else:
-                return random.choice(
-                    [action for action, value in actionDict.items() if value == max(actionDict.values())])
+            return random.choice(
+                [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def setState(self, state):
         self.curState = state
