@@ -24,16 +24,22 @@ class MonteCarloAgent(Agent):
 
     def learn(self):
         G = 0
+        GList = []
         tempDict = OrderedDict()
         curEpisodeList = []
-        for i in range(1, len(self.stateActionList) + 1):
+
+        for i in range(1, len(self.rewardList) + 1):
             G = self.discountFactor * G + self.rewardList[-i]
-            tempDict[self.stateActionList[-i]] = G
-        print(tempDict)
-        for key, value in tempDict.items():
-            self.returnsDict[key].append(value)
-            self.QValueTable[key] = sum(self.returnsDict[key]) / len(self.returnsDict[key])
-            curEpisodeList.append(self.QValueTable[key])
+            GList.insert(0, G)
+
+        for stateAction, GValue in zip(self.stateActionList, GList):
+            if stateAction not in tempDict.keys():
+                tempDict[stateAction] = GValue
+
+        for stateAction, GValue in tempDict.items():
+            self.returnsDict[stateAction].append(GValue)
+            self.QValueTable[stateAction] = sum(self.returnsDict[stateAction]) / len(self.returnsDict[stateAction])
+            curEpisodeList.append(self.QValueTable[stateAction])
 
         return self.QValueTable, curEpisodeList
 
@@ -47,7 +53,7 @@ class MonteCarloAgent(Agent):
 
     def setState(self, state):
         self.curState = state
-        if self.curState not in self.QValueTable.keys():
+        if (self.curState, 'KICK') not in self.QValueTable.keys():
             self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def reset(self):
