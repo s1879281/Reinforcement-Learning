@@ -39,7 +39,8 @@ class SARSAAgent(Agent):
         if randomNum < self.epsilon:
             return random.choice(self.possibleActions)
         else:
-            actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
+            actionDict = {key[1]: value for key, value in self.QValueTable.items() if
+                          key[0] == self.curState and key[1] != None}
             return random.choice(
                 [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
@@ -108,7 +109,7 @@ if __name__ == '__main__':
 
         while status == 0:
             learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
-            print(learningRate,epsilon)
+            print(learningRate, epsilon)
             agent.setEpsilon(epsilon)
             agent.setLearningRate(learningRate)
 
