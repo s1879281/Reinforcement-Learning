@@ -62,6 +62,7 @@ class RLTest(unittest.TestCase):
         _, QValueList = agent.learn()
         self.assertEqual(QValueList, [-0.4, 0, 0])
 
+        agent.reset()
         for obsCopy, action, reward, nextObservation in zip(
                 [((1, 1), (2, 1)), ((0, 1), (2, 1)), ((1, 1), (2, 1)), ((0, 1), (2, 1))],
                 ['DRIBBLE_RIGHT', 'DRIBBLE_LEFT', 'DRIBBLE_RIGHT', 'DRIBBLE_RIGHT'],
