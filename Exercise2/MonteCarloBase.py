@@ -29,6 +29,7 @@ class MonteCarloAgent(Agent):
         for i in range(1, len(self.stateActionList) + 1):
             G = self.discountFactor * G + self.rewardList[-i]
             tempDict[self.stateActionList[-i]] = G
+        print(tempDict)
         for key, value in tempDict.items():
             self.returnsDict[key].append(value)
             self.QValueTable[key] = sum(self.returnsDict[key]) / len(self.returnsDict[key])
