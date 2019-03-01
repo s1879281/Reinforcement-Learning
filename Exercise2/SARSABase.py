@@ -95,7 +95,7 @@ if __name__ == '__main__':
     hfoEnv.connectToServer()
 
     # Initialize a SARSA Agent
-    agent = SARSAAgent(0.6, 0.99, 1.0)
+    agent = SARSAAgent(0.4, 0.99, 1.0)
 
     # Run training using SARSA
     numTakenActions = 0
