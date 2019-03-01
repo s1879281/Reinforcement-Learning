@@ -27,8 +27,8 @@ class QLearningAgent(Agent):
     def learn(self):
         nextStateQList = [value for key, value in self.QValueTable.items() if key[0] == self.nextState]
         update = self.learningRate * (
-                    self.rewardList[-1] + self.discountFactor * max(nextStateQList) - self.QValueTable[
-                (self.curState, self.actionList[-1])])
+                self.rewardList[-1] + self.discountFactor * max(nextStateQList) - self.QValueTable[
+            (self.curState, self.actionList[-1])])
         self.QValueTable[(self.curState, self.actionList[-1])] += update
 
         return update
@@ -39,11 +39,8 @@ class QLearningAgent(Agent):
             return random.choice(self.possibleActions)
         else:
             actionDict = {key[1]: value for key, value in self.QValueTable.items() if key[0] == self.curState}
-            if len(actionDict) == 0:
-                return random.choice(self.possibleActions)
-            else:
-                return random.choice(
-                    [action for action, value in actionDict.items() if value == max(actionDict.values())])
+            return random.choice(
+                [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def toStateRepresentation(self, state):
         return str(state)
