@@ -47,7 +47,7 @@ class QLearningAgent(Agent):
 
     def setState(self, state):
         self.curState = state
-        if self.curState not in self.QValueTable.keys():
+        if (self.curState, 'KICK') not in self.QValueTable.keys():
             self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
@@ -56,7 +56,7 @@ class QLearningAgent(Agent):
         self.rewardList.append(reward)
         self.statusList.append(status)
         self.nextState = nextState
-        if self.nextState not in self.QValueTable.keys():
+        if (self.nextState, 'KICK') not in self.QValueTable.keys():
             self.QValueTable.update({(self.nextState, action): self.initVals for action in self.possibleActions})
 
     def setLearningRate(self, learningRate):

@@ -5,6 +5,8 @@ import argparse
 import random
 from collections import defaultdict
 
+import numpy as np
+
 from DiscreteHFO.Agent import Agent
 from DiscreteHFO.HFOAttackingPlayer import HFOAttackingPlayer
 
@@ -43,7 +45,7 @@ class SARSAAgent(Agent):
 
     def setState(self, state):
         self.curState = state
-        if self.curState not in self.QValueTable.keys():
+        if (self.curState, 'KICK') not in self.QValueTable.keys():
             self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
@@ -54,7 +56,7 @@ class SARSAAgent(Agent):
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
         learningRate = self.initLearningRate * 0.95 ** (episodeNumber // 100)
-        epsilon = self.initEpsilon * 0.85 ** (episodeNumber // 100)
+        epsilon = self.initEpsilon * ((1 - 1 / (1 + np.exp(-numTakenActions / 1000))) * 2 * 0.9 + 0.1)
 
         return learningRate, epsilon
 
@@ -104,6 +106,7 @@ if __name__ == '__main__':
 
         while status == 0:
             learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
+            print(learningRate,epsilon)
             agent.setEpsilon(epsilon)
             agent.setLearningRate(learningRate)
 
