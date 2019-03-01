@@ -43,12 +43,14 @@ class QLearningAgent(Agent):
                 [action for action, value in actionDict.items() if value == max(actionDict.values())])
 
     def toStateRepresentation(self, state):
-        return str(state)
+        state = str(state)
+        if (state, 'KICK') not in self.QValueTable.keys():
+            self.QValueTable.update({(state, action): self.initVals for action in self.possibleActions})
+
+        return state
 
     def setState(self, state):
         self.curState = state
-        if (self.curState, 'KICK') not in self.QValueTable.keys():
-            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateList.append(state)
@@ -56,8 +58,6 @@ class QLearningAgent(Agent):
         self.rewardList.append(reward)
         self.statusList.append(status)
         self.nextState = nextState
-        if (self.nextState, 'KICK') not in self.QValueTable.keys():
-            self.QValueTable.update({(self.nextState, action): self.initVals for action in self.possibleActions})
 
     def setLearningRate(self, learningRate):
         self.learningRate = learningRate

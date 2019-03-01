@@ -44,7 +44,11 @@ class MonteCarloAgent(Agent):
         return self.QValueTable, curEpisodeList
 
     def toStateRepresentation(self, state):
-        return str(state)
+        state = str(state)
+        if (state, 'KICK') not in self.QValueTable.keys():
+            self.QValueTable.update({(state, action): self.initVals for action in self.possibleActions})
+
+        return state
 
     def setExperience(self, state, action, reward, status, nextState):
         self.stateActionList.append((state, action))
@@ -53,8 +57,6 @@ class MonteCarloAgent(Agent):
 
     def setState(self, state):
         self.curState = state
-        if (self.curState, 'KICK') not in self.QValueTable.keys():
-            self.QValueTable.update({(self.curState, action): self.initVals for action in self.possibleActions})
 
     def reset(self):
         self.stateActionList = []
