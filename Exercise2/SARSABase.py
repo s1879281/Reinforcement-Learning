@@ -109,7 +109,6 @@ if __name__ == '__main__':
 
         while status == 0:
             learningRate, epsilon = agent.computeHyperparameters(numTakenActions, episode)
-            print(learningRate, epsilon)
             agent.setEpsilon(epsilon)
             agent.setLearningRate(learningRate)
 
