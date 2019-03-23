@@ -1,7 +1,10 @@
+import sys
+sys.path.insert(0, '../..')
 from QLearningBase import QLearningAgent
 import csv
 import ast
 import math
+
 
 def csvLoader(filename):
 	result = []
