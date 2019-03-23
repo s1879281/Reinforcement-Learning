@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '../..')
+
 from SARSABase import SARSAAgent
 import csv
 import ast
