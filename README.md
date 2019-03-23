@@ -1,4 +1,4 @@
-# reinforcement-learning
+# Reinforcement learning
 
-Algorithm implements for Reinforcement Learning.
+This is a python implementation of reinforcement learning algorithms.
 
