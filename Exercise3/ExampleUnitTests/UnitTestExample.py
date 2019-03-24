@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '../.')
+
 import torch
 from SampleNetworks import ValueNetwork
 from Worker import computeTargets, computePrediction
@@ -40,7 +43,7 @@ if __name__ == "__main__":
 	example_model = ValueNetwork(20,[15,15],4)
 	example_model.load_state_dict(torch.load('ExampleNetwork'))
 
-	# Check for correctness	
+	# Check for correctness
 	for a in range(len(input_floats)):
 		pred_value = computePrediction(torch.Tensor([input_floats[a]]), action_ints[a], example_model).item()
 		if not math.isclose(pred_value, output_floats_1[a], abs_tol=1e-3):
