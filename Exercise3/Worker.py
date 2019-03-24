@@ -15,7 +15,7 @@ def train():
 
 def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork):
     if done:
-        return reward
+        return torch.tensor(reward)
     else:
         target_value = reward + discountFactor * max(targetNetwork(nextObservation)[0])
         return target_value
