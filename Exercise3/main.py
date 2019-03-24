@@ -11,8 +11,8 @@ if __name__ == "__main__" :
 	# Example on how to initialize global locks for processes
 	# and counters.
 	
-	#counter = mp.Value('i', 0)
-	#lock = mp.Lock()
+	counter = mp.Value('i', 0)
+	lock = mp.Lock()
 
 	# Example code to initialize torch multiprocessing.
 	#for idx in range(0, args.num_processes):
