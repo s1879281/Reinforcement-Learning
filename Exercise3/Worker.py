@@ -19,7 +19,7 @@ def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork)
 
 
 def computePrediction(state, action, valueNetwork):
-    pred_value = valueNetwork(state).item()
+    pred_value = max(valueNetwork(state)).item()
     return pred_value
 
 # Function to save parameters of a neural network in pytorch.
