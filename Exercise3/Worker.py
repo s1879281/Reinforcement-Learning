@@ -14,12 +14,12 @@ def train():
 
 
 def computeTargets(reward, nextObservation, discountFactor, done, targetNetwork):
-    target_value = reward + discountFactor * max(targetNetwork(nextObservation)).item()
+    target_value = reward + discountFactor * max(targetNetwork(nextObservation))
     return target_value
 
 
 def computePrediction(state, action, valueNetwork):
-    pred_value = max(valueNetwork(state)).item()
+    pred_value = max(valueNetwork(state))
     return pred_value
 
 # Function to save parameters of a neural network in pytorch.
