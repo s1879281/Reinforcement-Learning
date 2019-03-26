@@ -21,8 +21,6 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     while counter.value <= args.num_episodes:
         done = False
         curState = hfoEnv.reset()
-        print('curstate',curState)
-        print('size....',curState.size())
 
         while not done:
             action = epsilon_greedy(curState, args.epsilon, value_network)

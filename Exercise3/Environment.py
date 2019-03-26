@@ -3,6 +3,7 @@
 
 import os
 import time
+import torch
 
 from hfo import *
 
@@ -117,4 +118,4 @@ class HFOEnv(object):
 
     # Preprocess the state representation in this function
     def preprocessState(self, state):
-        return state
+        return torch.tensor(state)
