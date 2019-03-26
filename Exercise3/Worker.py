@@ -29,13 +29,14 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
 
             pred_value = computePrediction(curState, action, value_network)
             target_value = computeTargets(reward, nextState, args.discountFactor, done, target_value_network)
+            print('target_value',target_value)
             loss = criterion(pred_value, target_value)
             loss.backward()
 
-            counter += 1
+            counter.value += 1
             thread_counter += 1
 
-            if counter % args.iterate_target == 0:
+            if counter.value % args.iterate_target == 0:
                 lock.acquire()
                 target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
                 lock.release()
