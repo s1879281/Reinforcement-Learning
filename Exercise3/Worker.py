@@ -17,6 +17,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     thread_counter = 0
     criterion = nn.MSELoss()
     optimizer.zero_grad()
+    target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
 
     while counter.value <= args.num_episodes:
         done = False
