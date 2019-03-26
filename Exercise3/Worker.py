@@ -17,6 +17,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     thread_counter = 0
     criterion = nn.MSELoss()
     optimizer.zero_grad()
+    target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
 
     while counter.value <= args.num_episodes:
         done = False
@@ -29,7 +30,6 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
 
             pred_value = computePrediction(curState, action, value_network)
             target_value = computeTargets(reward, nextState, args.discountFactor, done, target_value_network)
-            print('target_value',target_value)
             loss = criterion(pred_value, target_value)
             loss.backward()
 
