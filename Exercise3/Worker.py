@@ -18,7 +18,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     criterion = nn.MSELoss()
     optimizer.zero_grad()
 
-    while counter <= args.num_episodes:
+    while counter.value <= args.num_episodes:
         done = False
         curState = hfoEnv.reset()
         print('size....',curState.size())
