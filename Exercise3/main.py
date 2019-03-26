@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_episodes', type=int, default=500)
     parser.add_argument('--iterate_target', type=int, default=5)
     parser.add_argument('--iterate_async', type=int, default=20)
-    parser.add_argument('--discount_factor', type=float, default=0.99)
+    parser.add_argument('--discountFactor', type=float, default=0.99)
     parser.add_argument('--epsilon', type=float, default=0.1)
     args = parser.parse_args()
 
