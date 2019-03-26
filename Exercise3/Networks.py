@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 # Define your neural networks in this class.
@@ -6,17 +7,29 @@ import torch.nn as nn
 # and define the computations for the forward pass in the forward method.
 
 class ValueNetwork(nn.Module):
-    def __init__(self, numTeammates, numOpponents):
+    def __init__(self, inputDims, layerDims, outputDims):
         super(ValueNetwork, self).__init__()
-        self.numFeatures = 58 + 9 * numTeammates + 9 * numOpponents + 1
-        self.hiddenDim = 50
-        self.fc1 = nn.Linear(self.numFeatures, self.hiddenDim, bias=True)
-        self.fc2 = nn.Linear(self.hiddenDim, 4, bias=True)
+
+        self.processingLayers = []
+        self.layerDims = layerDims
+        self.layerDims.insert(0, inputDims)
+        self.layerDims.append(outputDims)
+
+        for idx in range(len(self.layerDims) - 1):
+            self.processingLayers.append(nn.Linear(self.layerDims[idx], self.layerDims[idx + 1]))
+
+        list_param = []
+        for a in self.processingLayers:
+            list_param.extend(list(a.parameters()))
+
+        self.LayerParams = nn.ParameterList(list_param)
 
     def forward(self, inputs):
-        output_fc1 = self.fc1(inputs)
-        output_fc1 = nn.ReLU(output_fc1)
-        output_fc2 = self.fc2(output_fc1)
-        output_fc2 = nn.ReLU(output_fc2)
+        out = inputs
+        for layers in self.processingLayers[:-1]:
+            out = layers(out)
+            out = F.relu(out)
 
-        return output_fc2
+        out = self.processingLayers[-1](out)
+
+        return out
