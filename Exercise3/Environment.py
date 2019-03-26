@@ -86,16 +86,16 @@ class HFOEnv(object):
     def get_reward(self, status, nextState):
 
         if status == GOAL:
-            reward = 1
+            reward = 1.
 
         elif status == CAPTURED_BY_DEFENSE:
-            reward = -1
+            reward = -1.
 
         elif status == OUT_OF_BOUNDS:
-            reward = -1
+            reward = -1.
 
         else:
-            reward = 0
+            reward = 0.
 
         info = {}
 
