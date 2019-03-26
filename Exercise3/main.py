@@ -25,9 +25,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-    value_network = ValueNetwork(20,[15,15],4)
+    value_network = ValueNetwork(15,[15,15],4)
     value_network.share_memory()
-    target_value_network = ValueNetwork(20,[15,15],4)
+    target_value_network = ValueNetwork(15,[15,15],4)
     target_value_network.share_memory()
     optimizer = SharedAdam(value_network.parameters())
 
