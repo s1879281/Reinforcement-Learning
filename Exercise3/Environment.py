@@ -118,4 +118,4 @@ class HFOEnv(object):
 
     # Preprocess the state representation in this function
     def preprocessState(self, state):
-        return torch.tensor(state)
+        return torch.tensor([state])
