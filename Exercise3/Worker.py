@@ -66,7 +66,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
 def epsilon_greedy(state, epsilon, value_network):
     randomNum = random.random()
     if randomNum < epsilon:
-        return random.choice(list(range(4)))
+        random_action = random.choice(list(range(4)))
+        print('random action:',random_action,'\n\n\n\n\n\n\n\n')
+        return random_action
     else:
         return torch.argmax(value_network(state)[0]).item()
 
