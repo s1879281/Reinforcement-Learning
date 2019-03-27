@@ -19,14 +19,18 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     criterion = nn.MSELoss()
     optimizer.zero_grad()
     target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
+    num_episode = 0
+    goal_list = []
 
     while True:
+        epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 250))) * 2 * 0.9 + 0.1)
+        print('epsilon\n\n\n', epsilon)
+        print('episode\n\n\n', num_episode)
         done = False
         curState = hfoEnv.reset()
         timestep = 0
 
         while not done and timestep < 500:
-            epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 250))) * 2 * 0.9 + 0.1)
             action = epsilon_greedy(curState, epsilon, value_network)
             nextState, reward, done, status, info = hfoEnv.step(hfoEnv.possibleActions[action])
 
@@ -42,6 +46,9 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             thread_counter += 1
             timestep += 1
 
+            if status == GOAL:
+                goal_list.append()
+
             if counter.value % args.iterate_target == 0:
                 target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
 
@@ -50,6 +57,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 optimizer.step()
                 optimizer.zero_grad()
                 saveModelNetwork(value_network, './checkpoint.pth')
+
+        num_episode += 1
 
 
 def epsilon_greedy(state, epsilon, value_network):
