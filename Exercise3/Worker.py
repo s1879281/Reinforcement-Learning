@@ -59,8 +59,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 optimizer.zero_grad()
                 saveModelNetwork(value_network, 'params/params_last')
 
-            if counter.value % 100000 == 0:
-                saveModelNetwork(value_network, 'params/params_{0:d}'.format(counter.value // 100000))
+            if counter.value % 500000 == 0:
+                saveModelNetwork(value_network, 'params/params_{0:d}'.format(counter.value // 500000))
 
         num_episode += 1
 

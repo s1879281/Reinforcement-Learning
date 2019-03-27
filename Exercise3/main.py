@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     # Example on how to initialize global locks for processes
     # and counters.
-    counter = mp.Value('i', 100001)
+    counter = mp.Value('i', 500001)
     lock = mp.Lock()
 
     processes = []
