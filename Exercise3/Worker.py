@@ -20,6 +20,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
 
     while counter.value <= args.num_episodes:
+        print('value\n\n\n',counter.value)
         done = False
         curState = hfoEnv.reset()
 
