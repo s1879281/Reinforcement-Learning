@@ -33,8 +33,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             loss = criterion(pred_value, target_value)
             loss.backward()
 
-	    with lock:
-            	counter.value += 1
+            with lock:
+                counter.value += 1
             thread_counter += 1
 
             if counter.value % args.iterate_target == 0:
