@@ -26,13 +26,13 @@ if __name__ == "__main__":
 
 
     value_network = ValueNetwork(15,[15,15],4)
-    saveModelNetwork(value_network, './params.pth')
+    saveModelNetwork(value_network, 'params/params_last')
     target_value_network = ValueNetwork(15,[15,15],4)
     optimizer = SharedAdam(value_network.parameters())
 
     # Example on how to initialize global locks for processes
     # and counters.
-    counter = mp.Value('i', 0)
+    counter = mp.Value('i', 100001)
     lock = mp.Lock()
 
     processes = []
