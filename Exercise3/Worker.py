@@ -27,7 +27,6 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 2000))) * 2 * 0.9 + 0.1)
         if num_episode >= 500:
             epsilon = 0.
-        print('epsilon\n\n\n', epsilon)
         print('goal_list\n\n\n', goal_list)
         done = False
         curState = hfoEnv.reset()
@@ -60,6 +59,39 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 optimizer.step()
                 optimizer.zero_grad()
                 saveModelNetwork(value_network, './checkpoint.pth')
+
+        num_episode += 1
+
+def evaluate(idx, target_value_network, lock, counter):
+    port = 6000 + idx
+    seed = 123 + idx * 10
+    hfoEnv = HFOEnv(numTeammates=0, numOpponents=1, port=port, seed=seed)
+    hfoEnv.connectToServer()
+
+    thread_counter = 0
+    target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
+    num_episode = 0
+    goal_list = []
+
+    while True:
+        epsilon = 0.
+        print('goal_list\n\n\n', goal_list)
+        done = False
+        curState = hfoEnv.reset()
+        timestep = 0
+
+        while not done and timestep < 500:
+            action = epsilon_greedy(curState, epsilon, target_value_network)
+            nextState, reward, done, status, info = hfoEnv.step(hfoEnv.possibleActions[action])
+            curState = nextState
+
+            with lock:
+                counter.value += 1
+            thread_counter += 1
+            timestep += 1
+
+            if status == GOAL:
+                goal_list.append(num_episode)
 
         num_episode += 1
 
