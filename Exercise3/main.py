@@ -27,6 +27,7 @@ if __name__ == "__main__":
 
     value_network = ValueNetwork(15,[15,15],4)
     value_network.share_memory()
+    saveModelNetwork(value_network, './checkpoint.pth')
     target_value_network = ValueNetwork(15,[15,15],4)
     target_value_network.share_memory()
     optimizer = SharedAdam(value_network.parameters())
