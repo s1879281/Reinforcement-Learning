@@ -19,12 +19,12 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     optimizer.zero_grad()
     target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
 
-    while counter.value <= args.num_episodes:
-        print('value\n\n\n',counter.value)
+    while True:
         done = False
         curState = hfoEnv.reset()
+        timestep = 0
 
-        while not done:
+        while not done and timestep < 500:
             action = epsilon_greedy(curState, args.epsilon, value_network)
             nextState, reward, done, status, info = hfoEnv.step(hfoEnv.possibleActions[action])
 
@@ -38,6 +38,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             with lock:
                 counter.value += 1
             thread_counter += 1
+            timestep += 1
 
             if counter.value % args.iterate_target == 0:
                 target_value_network.load_state_dict(torch.load('./checkpoint.pth'))

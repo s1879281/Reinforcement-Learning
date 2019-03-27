@@ -17,19 +17,17 @@ from Environment import HFOEnv
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--num_processes', type=int, default=8)
-    parser.add_argument('--num_episodes', type=int, default=500)
-    parser.add_argument('--iterate_target', type=int, default=20)
-    parser.add_argument('--iterate_async', type=int, default=5)
+    parser.add_argument('--max_timestep', type=int, default=500)
+    parser.add_argument('--iterate_target', type=int, default=200)
+    parser.add_argument('--iterate_async', type=int, default=20)
     parser.add_argument('--discountFactor', type=float, default=0.99)
     parser.add_argument('--epsilon', type=float, default=0.1)
     args = parser.parse_args()
 
 
     value_network = ValueNetwork(15,[15,15],4)
-    value_network.share_memory()
     saveModelNetwork(value_network, './checkpoint.pth')
     target_value_network = ValueNetwork(15,[15,15],4)
-    target_value_network.share_memory()
     optimizer = SharedAdam(value_network.parameters())
 
     # Example on how to initialize global locks for processes
