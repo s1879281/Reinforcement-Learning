@@ -48,7 +48,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             timestep += 1
 
             if status == GOAL:
-                goal_list.append()
+                goal_list.append(num_episode)
 
             if counter.value % args.iterate_target == 0:
                 target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
