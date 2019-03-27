@@ -25,7 +25,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
 
     while True:
         epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 2000))) * 2 * 0.9 + 0.1)
-        # epsilon = 1.
+        if num_episode >= 500:
+            epsilon = 0.
         print('epsilon\n\n\n', epsilon)
         print('goal_list\n\n\n', goal_list)
         done = False
@@ -67,7 +68,6 @@ def epsilon_greedy(state, epsilon, value_network):
     randomNum = random.random()
     if randomNum < epsilon:
         random_action = random.choice(list(range(4)))
-        print('random action:',random_action,'\n\n\n\n\n\n\n\n')
         return random_action
     else:
         return torch.argmax(value_network(state)[0]).item()
