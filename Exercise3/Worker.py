@@ -33,21 +33,18 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
             loss = criterion(pred_value, target_value)
             loss.backward()
 
-            counter.value += 1
+            with lock:
+                counter.value += 1
             thread_counter += 1
 
             if counter.value % args.iterate_target == 0:
-                lock.acquire()
                 target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
-                lock.release()
 
 
             if thread_counter % args.iterate_async == 0 or done:
                 optimizer.step()
                 optimizer.zero_grad()
-                lock.acquire()
                 saveModelNetwork(value_network, './checkpoint.pth')
-                lock.release()
 
 
 def epsilon_greedy(state, epsilon, value_network):
