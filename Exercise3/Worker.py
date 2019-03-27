@@ -27,12 +27,13 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         while not done:
             action = epsilon_greedy(curState, args.epsilon, value_network)
             nextState, reward, done, status, info = hfoEnv.step(hfoEnv.possibleActions[action])
-            curState = nextState
 
             pred_value = computePrediction(curState, action, value_network)
             target_value = computeTargets(reward, nextState, args.discountFactor, done, target_value_network)
             loss = criterion(pred_value, target_value)
             loss.backward()
+
+            curState = nextState
 
             with lock:
                 counter.value += 1
