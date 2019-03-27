@@ -7,6 +7,7 @@ from Networks import ValueNetwork
 from torch.autograd import Variable
 from Environment import HFOEnv
 import random
+import numpy as np
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter):
     port = 6000 + idx
@@ -25,7 +26,8 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
         timestep = 0
 
         while not done and timestep < 500:
-            action = epsilon_greedy(curState, args.epsilon, value_network)
+            epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 250))) * 2 * 0.9 + 0.1)
+            action = epsilon_greedy(curState, epsilon, value_network)
             nextState, reward, done, status, info = hfoEnv.step(hfoEnv.possibleActions[action])
 
             pred_value = computePrediction(curState, action, value_network)
