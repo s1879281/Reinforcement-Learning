@@ -24,9 +24,10 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     goal_list = []
 
     while True:
-        epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 2000))) * 2 * 0.9 + 0.1)
-        if num_episode >= 500:
-            epsilon = 0.
+        # epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 2000))) * 2 * 0.9 + 0.1)
+        # if num_episode >= 500:
+        #     epsilon = 0.
+        epsilon = 0.05
         done = False
         curState = hfoEnv.reset()
         timestep = 0
