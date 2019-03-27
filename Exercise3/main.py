@@ -26,7 +26,8 @@ if __name__ == "__main__":
 
 
     value_network = ValueNetwork(15,[15,15],4)
-    saveModelNetwork(value_network, 'params/params_last')
+    # saveModelNetwork(value_network, 'params/params_last')
+    value_network.load_state_dict(torch.load('params/params_last'))
     target_value_network = ValueNetwork(15,[15,15],4)
     optimizer = SharedAdam(value_network.parameters())
 
