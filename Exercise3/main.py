@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--num_processes', type=int, default=8)
     parser.add_argument('--max_timestep', type=int, default=500)
-    parser.add_argument('--iterate_target', type=int, default=200)
+    parser.add_argument('--iterate_target', type=int, default=2000)
     parser.add_argument('--iterate_async', type=int, default=20)
     parser.add_argument('--discountFactor', type=float, default=0.99)
     parser.add_argument('--epsilon', type=float, default=1.)
