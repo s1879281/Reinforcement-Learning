@@ -32,12 +32,12 @@ class HFOEnv(object):
     def startEnv(self):
         if self.numTeammates == 0:
             os.system(
-                "./../../../bin/HFO --seed {} --defense-npcs=0 --defense-agents={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
+                "./../../../bin/HFO --seed {} --headless --defense-npcs=0 --defense-agents={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
                     str(self.seed),
                     str(self.numOpponents), str(self.port)))
         else:
             os.system(
-                "./../../../bin/HFO --seed {} --defense-agents={} --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
+                "./../../../bin/HFO --seed {} --headless --defense-agents={} --defense-npcs=0 --offense-npcs={} --offense-agents=1 --trials 8000 --untouched-time 500 --frames-per-trial 500 --port {} --fullstate &".format(
                     str(self.seed), str(self.numOpponents), str(self.numTeammates), str(self.port)))
         time.sleep(5)
 
@@ -86,13 +86,13 @@ class HFOEnv(object):
     def get_reward(self, status, nextState):
 
         if status == GOAL:
-            reward = 1.
+            reward = 100.
 
         elif status == CAPTURED_BY_DEFENSE:
-            reward = -1.
+            reward = -100.
 
         elif status == OUT_OF_BOUNDS:
-            reward = -1.
+            reward = -100.
 
         else:
             reward = 0.
