@@ -19,7 +19,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     thread_counter = 0
     criterion = nn.MSELoss()
     optimizer.zero_grad()
-    target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
+    target_value_network.load_state_dict(torch.load('./params.pth'))
     num_episode = 0
     goal_list = []
 
@@ -51,13 +51,13 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
                 goal_list.append(num_episode)
 
             if counter.value % args.iterate_target == 0:
-                target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
+                target_value_network.load_state_dict(torch.load('./params.pth'))
 
 
             if thread_counter % args.iterate_async == 0 or done:
                 optimizer.step()
                 optimizer.zero_grad()
-                saveModelNetwork(value_network, './checkpoint.pth')
+                saveModelNetwork(value_network, './params.pth')
 
         num_episode += 1
 
@@ -68,7 +68,7 @@ def evaluate(idx, target_value_network, lock, counter):
     hfoEnv.connectToServer()
 
     thread_counter = 0
-    target_value_network.load_state_dict(torch.load('./checkpoint.pth'))
+    target_value_network.load_state_dict(torch.load('checkpoint/checkpoint'))
     num_episode = 0
     goal_list = []
 
