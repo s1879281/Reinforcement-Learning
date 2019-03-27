@@ -25,9 +25,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-    value_network = ValueNetwork(15,[15,15],4)
+    value_network = ValueNetwork(68,[15,15],4)
     saveModelNetwork(value_network, './checkpoint.pth')
-    target_value_network = ValueNetwork(15,[15,15],4)
+    target_value_network = ValueNetwork(68,[15,15],4)
     optimizer = SharedAdam(value_network.parameters())
 
     # Example on how to initialize global locks for processes
