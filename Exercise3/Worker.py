@@ -24,7 +24,7 @@ def train(idx, args, value_network, target_value_network, optimizer, lock, count
     goal_list = []
 
     while True:
-        epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 5000))) * 2 * 0.9 + 0.1)
+        epsilon = args.epsilon * ((1 - 1 / (1 + np.exp(-thread_counter / 2000))) * 2 * 0.9 + 0.1)
         # epsilon = 1.
         print('epsilon\n\n\n', epsilon)
         print('goal_list\n\n\n', goal_list)
