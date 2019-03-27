@@ -8,6 +8,7 @@ from torch.autograd import Variable
 from Environment import HFOEnv
 import random
 import numpy as np
+from hfo import *
 
 def train(idx, args, value_network, target_value_network, optimizer, lock, counter):
     port = 6000 + idx
