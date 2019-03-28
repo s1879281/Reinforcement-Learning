@@ -77,7 +77,7 @@ class MonteCarloAgent(Agent):
         self.epsilon = epsilon
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        epsilon = self.initEpsilon * ((1 - 1 / (1 + np.exp(-numTakenActions / 250))) * 2 * 0.9 + 0.1)
+        epsilon = 1. * ((1 - 1 / (1 + np.exp(-numTakenActions / 250))) * 2 * 0.9 + 0.1)
 
         return epsilon
 

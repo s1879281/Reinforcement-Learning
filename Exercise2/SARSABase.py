@@ -54,8 +54,8 @@ class SARSAAgent(Agent):
         self.statusList.append(status)
 
     def computeHyperparameters(self, numTakenActions, episodeNumber):
-        learningRate = self.initLearningRate * 0.9 ** (episodeNumber // 100)
-        epsilon = self.initEpsilon * ((1 - 1 / (1 + np.exp(-numTakenActions / 250))) * 2 * 0.9 + 0.1)
+        learningRate = max(0.5 * 0.95 ** (episodeNumber // 100), 0.05)
+        epsilon = 1. * ((1 - 1 / (1 + np.exp(-numTakenActions / 250))) * 2 * 0.9 + 0.1)
 
         return learningRate, epsilon
 
