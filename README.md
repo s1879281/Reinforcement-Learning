@@ -2,10 +2,10 @@
 
 This is a python implementation of Reinforcement Learning algorithms.
 
-The algorithms are addressing the Half-Field Offence (HFO) problem 
-(taken from 
-[https://github.com/raharrasy/HFO]
-(https://github.com/raharrasy/HFO))
+These algorithms are addressing the Half-Field Offence (HFO) problem 
+(refer to  
+[https://github.com/raharrasy/HFO](https://github.com/raharrasy/HFO) to 
+install the environment)
 
 * Exercise 1 - Value Iteration.
 
