@@ -12,7 +12,7 @@ echo "Environment Initialized"
 # Sleep is needed to make sure doesn't get connected too soon, as unum 1 (goalie)
 sleep 5
 
-./MonteCarloBase.py --numEpisodes=500 --numOpponents=1 &
+./MonteCarloBase_1.py --numEpisodes=500 --numOpponents=1 &
 echo "Attacker Controller Initialized"
 
 sleep 5
